@@ -1,0 +1,18 @@
+{
+    "config": {
+        "chainId": 123,
+        "homesteadBlock": 0,
+        "eip155Block": 0,
+        "eip158Block": 0
+    },
+    "difficulty": "0x1000000",
+    "gasLimit": "0x8000000",
+    "alloc": {
+        "ADDR1": {
+            "balance": "300000"
+        },
+        "ADDR2": {
+            "balance": "400000"
+        }
+    }
+}
