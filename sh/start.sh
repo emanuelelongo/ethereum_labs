@@ -3,4 +3,4 @@
 # the networkid passed in has to be the same defined inside the genesis.json 
 # and yeh, you need to pass --datadir every time
 
-geth --datadir .chaindata --networkid 123 --mine --minerthreads=2
+geth --datadir net/.data --networkid 123 --mine --minerthreads=2

@@ -3,4 +3,4 @@
 # you can launch a console in another shell and send command to your network;
 # This script launch the console and attach it to the network
 
-geth attach .chaindata/geth.ipc
+geth attach net/.data/geth.ipc

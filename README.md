@@ -7,6 +7,7 @@ If you are totally new to the subject there is a lot of stuff to read, just to b
 
 * [intro to programming smart contract](https://medium.com/@ConsenSys/a-101-noob-intro-to-programming-smart-contracts-on-ethereum-695d15c1dab4)
 * [solidity](https://solidity.readthedocs.io/en/develop/)
+* [deploying smart contract the hard way](https://medium.com/@gus_tavo_guim/deploying-a-smart-contract-the-hard-way-8aae778d4f2a)
 
 Long story short, you write a kind of singleton classes, called _smart contracts_, that are deployed over the network and kept in execution by the miners. Miners take commissions to run this code so a contract needs some money - or [gas](https://ethereum.stackexchange.com/questions/3/what-is-meant-by-the-term-gas) - to stay alive.
 
@@ -22,32 +23,26 @@ $ brew install ethereum
 
 Once installed, _geth_ allow you to interact with the real network as well as a private networks. Keep in mind that unless you avoid it explicitly by parameters, geth will try to _connect_ to the real network and to download a huge amount of data so don't go blind and keep reading.
 
-To make things easier the <code>network</code> folder of this repo contains some script that automate creation of the network. 
+To make things easier the <code>sh</code> folder of this repo contains some script that automate common tasks.
 
- We'll need to create some accounts in order to execute transactions.
-First step is to define the password of these accounts.
-Since it is a testing network we don't mind to have different passwords for each account, instead simply decide your unique password and write it inside the <code>network/password.txt</code> file.
-
-This is the only configuration I left outside these scripts, if you want more control take a look at <code>network/genesis_template.json</code> file.
-
+The first script we are going to run is <code>sh/init.sh</code>.
+This script will initialize the network creating two prefilled account. I recommend to go deeper in details looking at the script itself, it is commented.
+The second one is <code>sh/start.sh</code> that will start the network.
 
 ```
-cd network
-vim password.txt
-# write your password and save
-./init.sh
-./start.sh
+$ sh/init.sh
+$ sh/start.sh
 ```
 
-Your network is now created and running.
-Next time you'll need to start it, simply run the <code>start.sh</code> script.
+Your network is now here and running.
+Next time you'll need to start it, simply run the <code>sh/start.sh</code> script.
 
+### Using the console
 Now you are ready to open a console and interact with your fresh network.
 Open another shell and let's check the two account we creted:
 
 ```
-cd network
-./console.sh
+$ sh/console.sh
 > eth.accounts
 ```
 
@@ -55,15 +50,48 @@ You should see an array of two address.
 We want now check the balance of these two address
 
 ```
-web3.fromWei(eth.getBalance('<first address>'), "ether")
-web3.fromWei(eth.getBalance('<second address>'), "ether")
+> web3.fromWei(eth.getBalance('<first address>'), "ether")
+> web3.fromWei(eth.getBalance('<second address>'), "ether")
 ```
+
+As you will have noticed, internal amount are stored in [_Wei_](https://github.com/ethereum/web3.js/blob/0.15.0/lib/utils/utils.js#L40) so we always need to use the <code>web3.fromWei</code> utility to translate in _ether_.
 
 ### Send a transaction
+...description...
+```
+> personal.unlockAccount('<first address>', 'password')
+> eth.sendTransaction({from: '<first address>', to: '<first address>', > value: web3.toWei(1, 'ether')})
+> web3.fromWei(eth.getBalance('<first address>'), "ether")
+> web3.fromWei(eth.getBalance('<second address>'), "ether")
+```
+
+### Starting and stopping miner
+...description...
+```
+> miner.start(1) # 1 is the number of thread to use
+> miner.stop()
+```
+
+### Loading script
+...description...
+```
+> loadScript('path/to/script.js')
+```
+
+### compile and deploy contracts
+...description...
+```
+$ sh/compile.sh contracts/greeter.sol
+$ sh/console.sh
+> loadScript('ext/deployContract.js')
+> personal.unlockAccount(eth.accounts[0])
+> instance = deployContract('greeter', 'ciao!')
+> eth.getTransactionReceipt(instance.transactionHash)
+```
+
+### Execute deployed contract
+...description...
 
 ```
-personal.unlockAccount('<first address>', 'password')
-eth.sendTransaction({from: '<first address>', to: '<first address>', value: web3.toWei(1, 'ether')})
-web3.fromWei(eth.getBalance('<first address>'), "ether")
-web3.fromWei(eth.getBalance('<second address>'), "ether")
+> instance.greet()
 ```
