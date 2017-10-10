@@ -77,6 +77,16 @@ If we check again the balances of both account we will see that nothing has chan
 
 ### Compile and deploy a contract
 Let's exit from the console and back to the bash to compile our first contract.
+
+We need to install the compiler first:
+
+```
+$ brew install solidity
+$ brew linkapps solidity
+```
+
+now we can compile the contract using the script:
+
 ```
 $ sh/compile.sh contracts/greeter.sol
 ```
